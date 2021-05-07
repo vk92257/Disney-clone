@@ -3,7 +3,7 @@ import {useEffect} from 'react';
 import {auth,provider} from '../Firebase';
 import {useDispatch , useSelector} from 'react-redux';
 import {useHistory} from 'react-router-dom';
-import{selectUserName, selectUserPhoto,setUserLoginDetails} from '../features/user/userSlice';
+import{selectUserName, selectUserPhoto,setSignOutState,setUserLoginDetails} from '../features/user/userSlice';
 const Header = (props)=>{
     const dispatch = useDispatch();
     const history = useHistory();
@@ -21,11 +21,16 @@ const Header = (props)=>{
   
   
     const handelAuth = ()=>{
-        auth.signInWithPopup(provider).then(result=>{
+       if(!userName){ auth.signInWithPopup(provider).then(result=>{
                 setUser(result.user);
         }).catch(err=>{
              alert(err.message);
-        })
+        })}
+        else if(userName){
+           auth.signOut().then(()=>{
+            dispatch(setSignOutState);
+            history.push("/"); 
+           }).catch(err => alert(err.message))       }
     }
 
     const setUser = user=>{
@@ -69,7 +74,14 @@ return (
         </a>
 
         </Menuitem>
+       
+       <SignOut>
        <UserImage src = {userPhoto} alt={userName}></UserImage>
+       <DropDown> 
+           <span onClick={handelAuth}>Sign Out</span>
+       </DropDown>
+       </SignOut>
+       
         </>)}
         {/* <Login  onClick ={handelAuth} >Login</Login> */}
     </Nav>
@@ -192,4 +204,39 @@ const Login = styled.a`
 
 const UserImage = styled.img`
 height:100%;
+`;
+
+
+const DropDown = styled.div`
+position:absolute;
+font-size:14px;
+cursor: pointer;
+letter-spacing: 3px;
+top:40px;
+right: 8px;
+opacity:0;
+width:100%;
+background: rgb(19,19,19);
+`;
+
+const SignOut = styled.div`
+position: relative;
+display:flex;
+width:48px;
+height:48px;
+justify-content:center;
+align-items: center;
+${UserImage}{
+    border-radius:50px;
+    width:100%;
+    height:100%;
+}
+
+&:hover{
+    ${DropDown}{
+        opacity:1;
+        transition-duration: 1s;
+    }
+}
+
 `;

@@ -3,19 +3,34 @@ const Viewrs = (props)=>{
     return(
         <Container>
             <Wrap>
-                <img src="/images/viewers-disney.png"/>
+            <img src="/images/viewers-disney.png"  alt=''/>
+                <video autoPlay={true} loop={true} playsInline={true}>
+                    <source src='/video/1564674844-disney.mp4'type ='video/mp4'/>
+                </video>
             </Wrap>
             <Wrap>
-                <img src="/images/viewers-marvel.png"/>
+                <img src="/images/viewers-marvel.png" alt='' />
+                <video autoPlay={true} loop={true} playsInline={true}>
+                    <source src='/video/1564676115-marvel.mp4'type ='video/mp4'/>
+                </video>
             </Wrap>
             <Wrap>
-                <img src="/images/viewers-national.png"/>
+                <img src="/images/viewers-national.png" alt='' />
+                <video autoPlay={true} loop={true} playsInline={true}>
+                    <source src='/video/1564676296-national-geographic.mp4'type ='video/mp4'/>
+                </video>
             </Wrap>
             <Wrap>
-                <img src="/images/viewers-pixar.png"/>
+                <img src="/images/viewers-pixar.png" alt='' />
+                <video autoPlay={true} loop={true} playsInline={true}>
+                    <source src='/video/1564676714-pixar.mp4'type ='video/mp4'/>
+                </video>
             </Wrap>
             <Wrap>
-                <img src="/images/viewers-starwars.png"/>
+                <img src="/images/viewers-starwars.png" alt='' />
+                <video autoPlay={true} loop={true} playsInline={true}>
+                    <source src='/video/1608229455-star-wars.mp4'type ='video/mp4'/>
+                </video>
             </Wrap>
             
         </Container>
@@ -44,7 +59,7 @@ box-shadow:rgb(0 0 0 / 69%) 0px 26px 30px -10px,
     cursor: pointer;
     overflow: hidden;
     position: relative;
-    border: 3px solid rgba(249,249,249,0.1);
+    border : 3px solid rgba(249,249,249,0.1);
 
     img{
         inset:0px;
@@ -53,7 +68,31 @@ box-shadow:rgb(0 0 0 / 69%) 0px 26px 30px -10px,
         object-fit:cover;
         opacity:1;
         position: absolute;
+        z-index:1;
     }
+     video{
+
+        top:0px;
+        width:100%;
+        height:100%;
+        position:absolute;
+        z-index:0;
+        opacity:0;
+        
+        
+            }
+            &:hover{
+                    
+            box-shadow:rgb(0 0 0 / 69%) 0px 26px 30px -10px,
+    rgb(0 0 0 / 73%) 0px 16px 10px -10px;
+    transform: scale(1.04); 
+    border-color: rgb(249, 249, 249,8.8);
+            
+    video{
+        transition: all 300ms;
+                    opacity:1;
+                }
+        }
     
 `;
 export default Viewrs;

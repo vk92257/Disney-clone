@@ -2,12 +2,20 @@ import styled from 'styled-components';
 import SliderImage from './SliderImage';
 
 import Viewrs from './../components/Viewrs';
+import Recomanded from './Recomanded';
+import NewDisney from './NewDisney';
+import Orignals from './Orignals';
+import Trending from './Trending';
 const Home = (props)=>{
 return(
     <Container>
          
           <SliderImage/>
-          <Viewrs></Viewrs>
+          <Viewrs/> 
+          <Recomanded/>
+          <NewDisney/>
+          <Orignals/>
+          <Trending/>
     </Container>
 );
 }

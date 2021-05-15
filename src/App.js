@@ -7,6 +7,7 @@ import Home from './components/Home';
 import Header from './components/Header';
 import Login from './components/Login'
 import './App.css';
+import Detail from "./components/Detail";
 
 function App() {
   return (
@@ -20,7 +21,9 @@ function App() {
           <Route path = '/home'>
             <Home/>
           </Route>
-
+          <Route path = '/detail/:id'>
+            <Detail/>
+          </Route>
       </Switch>
     </Router>
     </div>

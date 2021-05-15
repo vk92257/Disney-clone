@@ -1,13 +1,13 @@
 import {createSlice}from '@reduxjs/toolkit';
 const initialState = {
-    newDisney : '',
-    recommanded: '',
-    orignals: '',
-    trending: '',
+    newDisney : null,  
+    recommanded: null,
+    orignals: null,
+    trending: null,
 }
 
 const monvieSlice = createSlice(
-    {nmae : 'movie',
+    {name : 'movie',
     initialState,
     reducers: {
         setMovie : (state, action )=>{
@@ -21,8 +21,10 @@ const monvieSlice = createSlice(
 
 );
 
-export const {setMovie} = monvieSlice.actions;
+export const { setMovie } = monvieSlice.actions;
 export const selectRecommanded = state => state.movie.recommanded;
 export const selectNewDisney = state => state.movie.newDisney;
 export const selectTrending= state => state.movie.trending;
 export const selectOrignals = state => state.movie.orignals;
+
+export default monvieSlice.reducer;

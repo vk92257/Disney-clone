@@ -1,15 +1,29 @@
 import styled from 'styled-components';
 import {Link} from 'react-router-dom';
+import {useSelector}from 'react-redux';
+import {selectRecommanded} from '../features/movie/movieSlice'
 
 const Recomanded = (props)=>{
-
+const movies = useSelector(selectRecommanded);
 return(
     <Container>
         <h3>Recomanded for you </h3>
     <Content>
        
+       {
+           movies && movies.map((movie , key)=>(
+             <Wrap key={key}>
+            <Link to={"/detail/" + movie.id} >
 
-        <Wrap>
+            <img src = {movie.cardImg} alt = {movie.title}/>
+
+            </Link>
+        </Wrap>
+
+           ))
+           }
+
+        {/* <Wrap>
             <Link to="/" >
 
             <img src = "https://pyxis.nymag.com/v1/imgs/e70/f36/f9ce2d68928e3e538e8776f69c8afe6852-10-minions.2x.rhorizontal.w710.jpg" alt = ""/>
@@ -33,13 +47,13 @@ return(
             </Link>
         </Wrap>
 
-        <Wrap>
-            <Link to="/" >
+        <Wrap> */}
+            {/* <Link to="/" >
 
                     <img src = "https://pyxis.nymag.com/v1/imgs/e70/f36/f9ce2d68928e3e538e8776f69c8afe6852-10-minions.2x.rhorizontal.w710.jpg" alt = ""/>
 
             </Link>
-        </Wrap>
+        </Wrap> */}
 
     </Content>
     </Container>
@@ -63,7 +77,7 @@ const Content = styled.div `
 
 const Wrap = styled.div`
 
-padding-top: 36%;
+padding-top: 55%;
 border-radius: 10px;
 box-shadow:rgb(0 0 0 / 69%) 0px 26px 30px -10px,
     rgb(0 0 0 / 73%) 0px 16px 10px -10px;

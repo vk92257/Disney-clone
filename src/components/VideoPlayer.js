@@ -13,26 +13,11 @@ const VideoPlayer = ({ videoUrl, posterUrl, title, onClose }) => {
   const [showControls, setShowControls] = useState(true);
   const controlsTimeoutRef = useRef(null);
   const [videoError, setVideoError] = useState(null);
-  const [isMobile, setIsMobile] = useState(false);
   
   // Double tap detection
   const lastTapRef = useRef(0);
-  const tapTimeoutRef = useRef(null);
   const tapPositionRef = useRef({ x: 0, y: 0 });
 
-  // Detect mobile device (specifically iOS which doesn't support MKV)
-  useEffect(() => {
-    const checkMobile = () => {
-      const userAgent = navigator.userAgent || navigator.vendor || window.opera;
-      const userAgentLower = userAgent.toLowerCase();
-      // Only flag iOS as problematic for MKV, Android might support it
-      const isIOS = /iphone|ipad|ipod/i.test(userAgentLower);
-      const isAndroid = /android/i.test(userAgentLower);
-      // Set mobile flag for UI purposes, but only block MKV on iOS
-      setIsMobile(isIOS || isAndroid);
-    };
-    checkMobile();
-  }, []);
 
   useEffect(() => {
     const video = videoRef.current;
@@ -47,8 +32,6 @@ const VideoPlayer = ({ videoUrl, posterUrl, title, onClose }) => {
 
     // Clear any errors when video successfully loads
     const handleCanPlay = () => {
-      console.log('Video can play:', videoUrl);
-      // Clear any errors if video can play
       setVideoError(null);
     };
 
@@ -209,10 +192,7 @@ const VideoPlayer = ({ videoUrl, posterUrl, title, onClose }) => {
     return typeMap[extension] || 'video/mp4';
   };
 
-  const isMKVFormat = (url) => {
-    if (!url) return false;
-    return url.toLowerCase().endsWith('.mkv');
-  };
+  // Removed MKV format check since we only use MP4 files now
 
   const handleMouseMove = () => {
     setShowControls(true);
@@ -250,14 +230,10 @@ const VideoPlayer = ({ videoUrl, posterUrl, title, onClose }) => {
   }, [videoUrl]);
 
   if (!videoUrl) {
-    console.log('VideoPlayer: No videoUrl provided');
     return null;
   }
 
-  console.log('VideoPlayer: Rendering with videoUrl:', videoUrl);
-
-  // Check if video format is MKV
-  const isMKV = isMKVFormat(videoUrl);
+  // Only MP4 files are supported now
 
   return (
     <VideoPlayerContainer 
@@ -271,17 +247,15 @@ const VideoPlayer = ({ videoUrl, posterUrl, title, onClose }) => {
         <ErrorMessage>
           <ErrorIcon>⚠️</ErrorIcon>
           <ErrorText>{videoError}</ErrorText>
-          {isMKV && (
-            <ErrorSolution>
-              <p>To fix this:</p>
-              <ol>
-                <li>Convert your MKV file to MP4 format</li>
-                <li>Use: <code>ffmpeg -i input.mkv -c:v libx264 -c:a aac output.mp4</code></li>
-                <li>Or run: <code>npm run convert-mkv</code></li>
-                <li>Update the video URL in MoviesData.json</li>
-              </ol>
-            </ErrorSolution>
-          )}
+          <ErrorSolution>
+            <p>If the video still doesn't play:</p>
+            <ol>
+              <li>Ensure the video file is in MP4 format</li>
+              <li>Check that the file path is correct</li>
+              <li>Try a different browser</li>
+              <li>Clear browser cache</li>
+            </ol>
+          </ErrorSolution>
           <CloseButton onClick={() => {
             setVideoError(null);
             onClose();
@@ -318,25 +292,16 @@ const VideoPlayer = ({ videoUrl, posterUrl, title, onClose }) => {
             const error = videoRef.current.error;
             console.error('Error code:', error?.code);
             console.error('Error message:', error?.message);
-            
+
             // Set error message for user only if video actually fails
             if (error) {
-              const userAgent = navigator.userAgent || navigator.vendor || window.opera;
-              const isIOS = /iphone|ipad|ipod/i.test(userAgent.toLowerCase());
-              const isAndroid = /android/i.test(userAgent.toLowerCase());
-              const isMKV = isMKVFormat(videoUrl);
-              
+              console.log('VideoPlayer: Video error - code:', error.code, 'message:', error.message);
+
               // Error code 4 = MEDIA_ERR_SRC_NOT_SUPPORTED
               if (error.code === 4) {
-                if (isMKV && isIOS) {
-                  setVideoError('MKV format is not supported on iOS. Please convert to MP4 format.');
-                } else if (isMKV && isAndroid) {
-                  setVideoError('MKV format may not be supported on this Android browser. Try converting to MP4 format.');
-                } else {
-                  setVideoError('Video format not supported on this device. Please convert to MP4 format.');
-                }
+                setVideoError('Video format not supported on this device. Please ensure the video is in MP4 format.');
               } else {
-                setVideoError('Unable to play video. Error code: ' + error.code + '. Please try a different browser or convert to MP4.');
+                setVideoError('Unable to play video. Error code: ' + error.code + '. Please try a different browser.');
               }
             }
           }

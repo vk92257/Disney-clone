@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #090b13;
+            color: white;
+        }
+        video {
+            width: 100%;
+            max-width: 600px;
+            border: 2px solid #f9f9f9;
+            border-radius: 10px;
+        }
+        .info {
+            background: rgba(255,255,255,0.1);
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Video Test - Jolly LLB 3</h1>
+    <div class="info">
+        <p><strong>Testing MP4 playback:</strong> /video/Jolly-LLB-3-ios-compatible.mp4</p>
+        <p><strong>Expected behavior:</strong> Video should play without errors on all devices including iOS</p>
+        <p><strong>If it doesn't play:</strong> Check browser console for errors and verify the file exists</p>
+    </div>
+
+    <video controls playsInline webkit-playsinline>
+        <source src="/video/Jolly-LLB-3-ios-compatible.mp4" type="video/mp4">
+        <source src="/video/Jolly-LLB-3-ios-compatible.mp4">
+        Sorry, your browser doesn't support embedded videos.
+    </video>
+
+    <div class="info">
+        <p><strong>Troubleshooting:</strong></p>
+        <ul>
+            <li>Check browser console for any error messages</li>
+            <li>Try opening the direct URL: <code>http://localhost:3002/video/Jolly-LLB-3-ios-compatible.mp4</code></li>
+            <li>If it downloads instead of playing, the MIME type is wrong</li>
+            <li>If you see codec errors, the MP4 encoding is not compatible</li>
+        </ul>
+    </div>
+</body>
+</html>

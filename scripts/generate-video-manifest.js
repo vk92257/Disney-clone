@@ -11,11 +11,12 @@ const path = require('path');
 const VIDEO_DIR = path.join(__dirname, '../public/video');
 const MANIFEST_PATH = path.join(__dirname, '../public/video-manifest.json');
 
-const VIDEO_EXTENSIONS = ['.mp4', '.mkv', '.webm', '.ogg', '.mov', '.avi'];
+const VIDEO_EXTENSIONS = ['.mp4']; // Only MP4 files are supported
 
 function isVideoFile(filename) {
   const lowerFilename = filename.toLowerCase();
-  return VIDEO_EXTENSIONS.some(ext => lowerFilename.endsWith(ext));
+  // Only accept MP4 files now
+  return lowerFilename.endsWith('.mp4');
 }
 
 function scanVideoFolder() {

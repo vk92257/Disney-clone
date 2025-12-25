@@ -74,23 +74,18 @@ const Home = (props)=>{
         // Load from JSON data
         Object.keys(movies).forEach(key => {
             const movie = movies[key];
-            console.log(movie.type);
             switch(movie.type){
                 case 'recommend':
                     recommanded = [...recommanded , {id: key, ...movie}];
-                    console.log(recommanded);
                      break;
                 case 'new':
                     newDisney = [...newDisney , {id: key, ...movie}];
-                    console.log(newDisney);
                     break;
                 case 'original':
                     orignals = [...orignals , {id: key, ...movie}];
-                    console.log(orignals);
                 break;
                 case 'trending':
                     trending = [...trending , {id: key, ...movie}];
-                    console.log(trending);
                 break;
                 default:
                     break;
@@ -99,7 +94,7 @@ const Home = (props)=>{
 
         // Add auto-detected videos to "new" section ONLY if they don't already exist in JSON
         if (autoVideos.length > 0) {
-            const uniqueAutoVideos = autoVideos.filter(autoMovie => 
+            const uniqueAutoVideos = autoVideos.filter(autoMovie =>
                 !existingVideoUrls.has(autoMovie.videoUrl)
             );
             newDisney = [...newDisney, ...uniqueAutoVideos];

@@ -30,11 +30,7 @@ const Detail = (props)=>{
             }
             
             if(movie){
-                console.log('Movie loaded:', movie);
-                console.log('Video URL:', movie.videoUrl);
                 setDetailData(movie);
-            }else{
-                console.log('no such movie in local data, id:', id);
             }
         };
         

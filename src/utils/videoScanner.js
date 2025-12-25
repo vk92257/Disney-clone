@@ -7,26 +7,44 @@
 // or fetched from a manifest.json file
 const VIDEO_EXTENSIONS = ['.mp4']; // Only MP4 files are supported
 
+// Cache for video files to avoid repeated fetches
+let videoCache = null;
+let cacheTimestamp = null;
+const CACHE_DURATION = 30000; // 30 seconds
+
 /**
  * Generate a list of video files
  * In a real app, this would fetch from a manifest.json or API
  * For now, we'll maintain a list that can be updated
  */
-export const getVideoFiles = async () => {
+export const getVideoFiles = async (forceRefresh = false) => {
+  // Return cached results if they're still fresh and not forcing refresh
+  if (!forceRefresh && videoCache && cacheTimestamp && (Date.now() - cacheTimestamp) < CACHE_DURATION) {
+    console.log('Returning cached video files');
+    return videoCache;
+  }
+
   try {
     // Try to fetch a manifest file first
-    const response = await fetch('/video-manifest.json');
+    const response = await fetch(`/video-manifest.json?t=${Date.now()}`);
     if (response.ok) {
       const manifest = await response.json();
       // Only return MP4 files
-      return (manifest.videos || []).filter(filename => filename.toLowerCase().endsWith('.mp4'));
+      const videos = (manifest.videos || []).filter(filename => filename.toLowerCase().endsWith('.mp4'));
+
+      // Update cache
+      videoCache = videos;
+      cacheTimestamp = Date.now();
+
+      console.log(`Loaded ${videos.length} videos from manifest`);
+      return videos;
     }
   } catch (error) {
     console.log('No manifest file found, using default list');
   }
 
   // Fallback: return known MP4 videos only
-  return [
+  const fallbackVideos = [
     '1564674844-disney.mp4',
     '1564676115-marvel.mp4',
     '1564676296-national-geographic.mp4',
@@ -34,6 +52,21 @@ export const getVideoFiles = async () => {
     '1608229455-star-wars.mp4',
     'Jolly.LLB-3.2025.mp4'
   ];
+
+  videoCache = fallbackVideos;
+  cacheTimestamp = Date.now();
+
+  return fallbackVideos;
+};
+
+/**
+ * Force refresh the video cache and manifest
+ */
+export const refreshVideoFiles = async () => {
+  console.log('Forcing refresh of video files...');
+  videoCache = null;
+  cacheTimestamp = null;
+  return await getVideoFiles(true);
 };
 
 /**

@@ -1,24 +1,44 @@
 import styled from 'styled-components';
 import {useEffect , useState} from 'react';
 import {useParams} from 'react-router-dom';
-import db from '../Firebase';
+// import db from '../Firebase';
+import movieData from '../MoviesData.json';
+import VideoPlayer from './VideoPlayer';
+import { getVideoFiles, generateMovieFromVideo } from '../utils/videoScanner';
 
 const Detail = (props)=>{
     const {id } = useParams();
     const [detailDate , setDetailData] = useState({});
+    const [showVideoPlayer, setShowVideoPlayer] = useState(false);
 
     useEffect(()=>{
-        db.collection('movies').doc(id)
-        .get()
-        .then(doc=>{
-                if(doc.exists){
-                    setDetailData(doc.data())
-                }else{
-                    console.log('no such document in firebase');
+        const loadMovie = async () => {
+            // First check JSON data
+            let movie = movieData.movies[id];
+            
+            // If not found, check auto-detected videos
+            if (!movie && id.startsWith('auto-')) {
+                try {
+                    const videoFiles = await getVideoFiles();
+                    const index = parseInt(id.replace('auto-', ''));
+                    if (videoFiles[index]) {
+                        movie = generateMovieFromVideo(videoFiles[index], index);
+                    }
+                } catch (error) {
+                    console.error('Error loading auto video:', error);
                 }
-            }).catch( err => {
-                console.log('Error getting document : ' , err);
-            })
+            }
+            
+            if(movie){
+                console.log('Movie loaded:', movie);
+                console.log('Video URL:', movie.videoUrl);
+                setDetailData(movie);
+            }else{
+                console.log('no such movie in local data, id:', id);
+            }
+        };
+        
+        loadMovie();
     },[id]);
     
     return(
@@ -31,7 +51,7 @@ const Detail = (props)=>{
           </ImagesTitel>
             <ContentMeta>
                 <Controll>
-                   <Player>
+                   <Player onClick={() => detailDate.videoUrl && setShowVideoPlayer(true)}>
                        <img src = '/images/play-icon-black.png' alt=''/>
                        <span> play </span>
                        </Player> 
@@ -54,6 +74,15 @@ const Detail = (props)=>{
                         {detailDate.description}
                     </Description>
             </ContentMeta>
+
+            {showVideoPlayer && (
+                <VideoPlayer
+                    videoUrl={detailDate.videoUrl}
+                    posterUrl={detailDate.backgroundImg}
+                    title={detailDate.title}
+                    onClose={() => setShowVideoPlayer(false)}
+                />
+            )}
         </Container>
 
     )
@@ -67,6 +96,12 @@ top:72px;
 overflow-x: hidden;
 min-height:calc(100vh-250px);
 padding: 0 calc(3.5vw+5px);
+
+@media (max-width: 768px) {
+    margin: 15px;
+    top: 60px;
+    padding: 0 10px;
+}
 `;
 const BackGround = styled.div`
     left: 0px;
@@ -112,6 +147,13 @@ const Controll = styled.div`
     flex-flow: row nowrap;
     margin : 24px;
     min-height: 56px;
+    flex-wrap: wrap;
+    gap: 10px;
+
+    @media (max-width: 768px) {
+        margin: 15px 0;
+        justify-content: center;
+    }
 `;
 const Player = styled.button`
     display: flex;

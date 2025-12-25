@@ -61,8 +61,22 @@ return(
 
 }
 const Container = styled.div`
-
 padding :  25px;
+
+@media (max-width: 768px) {
+    padding: 15px;
+}
+
+h3 {
+    font-size: 20px;
+    margin-bottom: 15px;
+    color: rgb(249, 249, 249);
+
+    @media (max-width: 768px) {
+        font-size: 18px;
+        margin-bottom: 10px;
+    }
+}
 `;
 const Content = styled.div `
     display: grid;
@@ -72,6 +86,12 @@ const Content = styled.div `
 
     @media (max-width : 768px){
         grid-template-columns: repeat(2, minmax(0,1fr));
+        gap: 15px;
+    }
+
+    @media (max-width : 480px){
+        grid-template-columns: repeat(1, minmax(0,1fr));
+        gap: 10px;
     }
 `;
 
